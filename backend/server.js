@@ -9,7 +9,7 @@ const PORT = 3000;
 
 // ✅ Use CORS to allow requests from port 5500
 app.use(cors({
-    origin: "http://127.0.0.1:5500"
+    origin: "https://screenshot-3prx.onrender.com"
 }));
 
 // ✅ Screenshot route
