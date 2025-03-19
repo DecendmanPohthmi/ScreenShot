@@ -25,7 +25,7 @@ app.get("/screenshot", async (req, res) => {
         const page = await browser.newPage();
 
         // ✅ Go to the frontend index.html running on port 5500
-        await page.goto("http://127.0.0.1:5500/frontend/index.html", { waitUntil: "networkidle2", timeout: 60000 });
+        await page.goto("https://screenshot-3prx.onrender.com/frontend/index.html", { waitUntil: "networkidle2", timeout: 60000 });
 
         // ✅ Set viewport to match your frontend size
         await page.setViewport({ width: 1920, height: 1080 });
