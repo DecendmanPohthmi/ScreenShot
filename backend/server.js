@@ -31,7 +31,7 @@ app.get("/screenshot", async (req, res) => {
         const page = await browser.newPage();
 
         // ✅ Go to the frontend hosted URL
-        await page.goto("https://screenshot-3prx.onrender.com", { waitUntil: "networkidle2", timeout: 60000 });
+        await page.goto("https://screenshot-3prx.onrender.com/frontend/index.html", { waitUntil: "networkidle2", timeout: 60000 });
 
         // ✅ Set viewport size
         await page.setViewport({ width: 1920, height: 1080 });
