@@ -9,7 +9,7 @@ const PORT = 3000;
 
 // ✅ Use CORS to allow requests from port 5500
 app.use(cors({
-    origin: "https://screenshot-3prx.onrender.com"
+    origin: "http://127.0.0.1:5500"
 }));
 
 // ✅ Screenshot route
@@ -19,21 +19,13 @@ app.get("/screenshot", async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true,
-            executablePath: '/usr/bin/chromium-browser',   // Render's Chromium path
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process',
-                '--disable-gpu'
-            ]
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
-
 
         const page = await browser.newPage();
 
         // ✅ Go to the frontend index.html running on port 5500
-        await page.goto("https://screenshot-3prx.onrender.com/frontend/index.html", { waitUntil: "networkidle2", timeout: 60000 });
+        await page.goto("http://127.0.0.1:5500/frontend/index.html", { waitUntil: "networkidle2", timeout: 60000 });
 
         // ✅ Set viewport to match your frontend size
         await page.setViewport({ width: 1920, height: 1080 });
