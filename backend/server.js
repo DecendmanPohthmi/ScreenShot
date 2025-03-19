@@ -19,8 +19,16 @@ app.get("/screenshot", async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            executablePath: '/usr/bin/chromium-browser',   // Render's Chromium path
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process',
+                '--disable-gpu'
+            ]
         });
+
 
         const page = await browser.newPage();
 
