@@ -7,9 +7,9 @@ const cors = require("cors");
 const app = express();
 const PORT = 3000;
 
-// ✅ Use CORS to allow multiple origins
+// ✅ Use CORS to allow requests from port 5500
 app.use(cors({
-    origin: ["https://screenshot-3prx.onrender.com", "http://localhost:5500"]
+    origin: "https://screenshot-3prx.onrender.com"
 }));
 
 // ✅ Screenshot route
@@ -19,47 +19,38 @@ app.get("/screenshot", async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true,
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--disable-software-rasterizer'
-            ]
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
         const page = await browser.newPage();
 
-        // ✅ Go to the frontend hosted URL
+        // ✅ Go to the frontend index.html running on port 5500
         await page.goto("https://screenshot-3prx.onrender.com/frontend/index.html", { waitUntil: "networkidle2", timeout: 60000 });
 
-        // ✅ Set viewport size
+        // ✅ Set viewport to match your frontend size
         await page.setViewport({ width: 1920, height: 1080 });
 
-        // ✅ Save screenshot in the /tmp directory (safe for Render)
-        const screenshotPath = path.join('/tmp', "screenshot.png");
+        const screenshotPath = path.join(__dirname, "screenshot.png");
 
-        // ✅ Capture the screenshot
+        // ✅ Capture only the visible page content
         await page.screenshot({ path: screenshotPath, fullPage: true });
         await browser.close();
 
         console.log("Screenshot captured!");
 
         // ✅ Send the screenshot as a downloadable image
-        res.download(screenshotPath, "screenshot.png", (err) => {
+        res.download(screenshotPath, "pinterest-marketing.png", (err) => {
             if (err) {
                 console.error("Error sending screenshot:", err);
                 res.status(500).send("Failed to send screenshot.");
             } else {
                 console.log("Screenshot sent.");
 
-                // ✅ Delete the screenshot after download completion
+                // ✅ Delete the screenshot after 5 seconds
                 setTimeout(() => {
                     console.log("Deleting screenshot...");
-                    if (fs.existsSync(screenshotPath)) {
-                        fs.unlinkSync(screenshotPath);
-                    }
-                }, 10000);  // 10 seconds to ensure download completion
+                    fs.unlinkSync(screenshotPath);
+                }, 5000);
             }
         });
 
@@ -69,7 +60,6 @@ app.get("/screenshot", async (req, res) => {
     }
 });
 
-// ✅ Start the server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
